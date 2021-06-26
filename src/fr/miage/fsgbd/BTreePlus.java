@@ -1,17 +1,18 @@
 package fr.miage.fsgbd;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.Serializable;
 
 
 /**
  * @author Galli Gregory, Mopolo Moke Gabriel
  * @param <Type>
  */
-public class BTreePlus<Type> implements java.io.Serializable {
+public class BTreePlus<Type> implements Serializable {
     private Noeud<Type> racine;
 
     public BTreePlus(int u, Executable e) {
-        racine = new Noeud<Type>(u, e, null);
+        racine = new Noeud<Type>(u, e, null, null);
     }
 
     public void afficheArbre() {
@@ -59,5 +60,38 @@ public class BTreePlus<Type> implements java.io.Serializable {
             if (racine != newRacine)
                 racine = newRacine;
         }
+    }
+
+    public Personne searchIndex(Type index,Noeud<Type> arbre) {
+        System.out.println("Je suis passé dans searchIndex");
+
+        for(Type key : arbre.keys) {
+            if((int) key == (int) index) {
+                return arbre.p;
+            }
+        }
+        // need help TY je commence a avoir la flemme mdr ui
+        return null;
+    }
+
+    public Personne searchSeq(Type index,Noeud<Type> arbre) {
+        System.out.println("Je suis passé dans searchSeq");
+        // si index contenu dans les fils alors return la personne dans le noeud fils
+        if(arbre.p.key==(int)index){
+            return arbre.p;
+        }
+        else{
+            if(arbre.fils==null){
+                return null;
+            }
+            for(Noeud<Type> f : arbre.fils){
+                return searchSeq(index,f);
+            }
+        }
+        return null;
+    }
+
+    public Noeud<Type> getRacine() {
+        return racine;
     }
 }
