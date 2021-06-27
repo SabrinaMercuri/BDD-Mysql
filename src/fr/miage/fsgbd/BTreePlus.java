@@ -2,6 +2,7 @@ package fr.miage.fsgbd;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -12,7 +13,7 @@ public class BTreePlus<Type> implements Serializable {
     private Noeud<Type> racine;
 
     public BTreePlus(int u, Executable e) {
-        racine = new Noeud<Type>(u, e, null, null);
+        racine = new Noeud<Type>(u, e, null);
     }
 
     public void afficheArbre() {
@@ -42,7 +43,6 @@ public class BTreePlus<Type> implements Serializable {
 
 
     public boolean addValeur(Type valeur) {
-        System.out.println("Ajout de la valeur : " + valeur.toString());
         if (racine.contient(valeur) == null) {
             Noeud<Type> newRacine = racine.addValeur(valeur);
             if (racine != newRacine)
@@ -63,32 +63,55 @@ public class BTreePlus<Type> implements Serializable {
     }
 
     public Personne searchIndex(Type index,Noeud<Type> arbre) {
-        System.out.println("Je suis passé dans searchIndex");
 
-        for(Type key : arbre.keys) {
-            if((int) key == (int) index) {
-                return arbre.p;
+        if(arbre.fils.size()==0){
+            if(arbre.keys.contains(index)) {
+                for (Type key : arbre.keys) {
+                    if ((int) key == (int) index) {
+                        Personne result = cherchePersonne(arbre.p, index);
+                        if(result != null) return result;
+                    }
+                }
+            }
+            return null;
+           
+        }
+        else {
+            for (Noeud<Type> n : arbre.fils) {
+                Personne result = searchIndex(index, n);
+                if(result != null) return result;
+            }
+            return null;
+        }
+    }
+
+    private Personne cherchePersonne(ArrayList<Personne> p, Type index) {
+        for(Personne pers : p){
+            if(pers.key==(int)index){
+                return pers;
             }
         }
-        // need help TY je commence a avoir la flemme mdr ui
         return null;
     }
 
+
     public Personne searchSeq(Type index,Noeud<Type> arbre) {
-        System.out.println("Je suis passé dans searchSeq");
-        // si index contenu dans les fils alors return la personne dans le noeud fils
-        if(arbre.p.key==(int)index){
-            return arbre.p;
+
+        if(arbre.fils.size() != 0) {
+            for (Noeud<Type> n : arbre.fils) {
+                 Personne result = searchSeq(index, n);
+                 if(result != null) return result;
+            }
+            return null;
         }
         else{
-            if(arbre.fils==null){
-                return null;
+            if(arbre.keys.contains(index)) {
+                for(Personne p : arbre.p) {
+                    if(p.key == (int) index) return p;
+                }
             }
-            for(Noeud<Type> f : arbre.fils){
-                return searchSeq(index,f);
-            }
+            return null;
         }
-        return null;
     }
 
     public Noeud<Type> getRacine() {

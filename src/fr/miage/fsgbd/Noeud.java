@@ -16,7 +16,7 @@ public class Noeud<Type> implements Serializable {
     public ArrayList<Noeud<Type>> fils = new ArrayList<Noeud<Type>>();
 
     //donnee stocké
-    public Personne p;
+    public ArrayList<Personne> p= new ArrayList<>();
 
     // Collection des cl�s du noeud courant
     public ArrayList<Type> keys = new ArrayList<Type>();
@@ -36,9 +36,8 @@ public class Noeud<Type> implements Serializable {
      * @param e Classe interfa�ant "Executable" et donc contenant une proc�dure de comparaison de <Type>
      * @param parent Nombre de cl�s minimum du noeud
      */
-    public Noeud(int u, Executable e, Noeud<Type> parent, Personne p) {
+    public Noeud(int u, Executable e, Noeud<Type> parent) {
         this.u = u;
-        this.p = p;
         this.tailleMin = u/2;
         compar = e;
         this.parent = parent;
@@ -131,10 +130,12 @@ public class Noeud<Type> implements Serializable {
      */
     private void insert(Type valeur) {
         int i = 0;
+        Personne p = new Personne((int)valeur,"nom"+(int)valeur,"prenom"+(int)valeur);
         while ((this.keys.size() > i) && compare(this.keys.get(i), valeur)) {
             i++;
         }
         this.keys.add(i, valeur);
+        this.p.add(p);
     }
 
     /**
@@ -430,13 +431,13 @@ public class Noeud<Type> implements Serializable {
      * @return la <Noeud>racine</Noeud> de l'arbre
      */
     public Noeud<Type> addValeur(Type nouvelleValeur, boolean force) {
-        Personne p = new Personne((int)nouvelleValeur,"nom"+(int)nouvelleValeur,"prenom"+(int)nouvelleValeur);
+        //Personne p = new Personne((int)nouvelleValeur,"nom"+(int)nouvelleValeur,"prenom"+(int)nouvelleValeur);
         // Initialisation des variables
         Noeud<Type> noeud, racine = this;
         Type eleMedian;
         int indexMedian;
 
-        racine.p = p;
+        //racine.p.add(p);
 
         // On remonte jusqu'� la racine � partir du noeud courant
         while (racine.parent != null)
@@ -459,8 +460,8 @@ public class Noeud<Type> implements Serializable {
 
 
                 // On cr�e deux nouveaux noeuds
-                Noeud<Type> noeudGauche = new Noeud<Type>(u, compar, null, null);
-                Noeud<Type> noeudDroit = new Noeud<Type>(u, compar, null, null);
+                Noeud<Type> noeudGauche = new Noeud<Type>(u, compar, null);
+                Noeud<Type> noeudDroit = new Noeud<Type>(u, compar, null);
 
                 // On ins�re la valeur comme nouvelle clef du noeud courant
                 noeud.insert(nouvelleValeur);
@@ -508,7 +509,7 @@ public class Noeud<Type> implements Serializable {
                 // Enfin, si le noeud courant est la racine
                 if (noeud.parent == null) {
                     // On cr�e un nouveau noeud qui prendra sa place
-                    Noeud<Type> nouveauParent = new Noeud<Type>(u, compar, null, null);
+                    Noeud<Type> nouveauParent = new Noeud<Type>(u, compar, null);
 
                     // Qui deviendra le parent des noeuds gauche et droit
                     nouveauParent.addNoeud(noeudGauche);

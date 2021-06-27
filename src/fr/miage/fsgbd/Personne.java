@@ -14,6 +14,10 @@ public class Personne implements Serializable {
         this.nom = nom;
         this.prenom = prenom;
     }
+
+    public Personne() {
+
+    }
     
     public String toString(){
         return "{ prenom : "+prenom+", nom : "+nom+" }";

@@ -42,11 +42,17 @@ public class GUI extends JFrame implements ActionListener {
             } else if (e.getSource() == buttonRefresh) {
                 tree.updateUI();
             } else if (e.getSource() == buttonSearchIndex) {
+                long i = System.currentTimeMillis();
                 Personne p = bInt.searchIndex(Integer.parseInt(txtToSearch.getText()),bInt.getRacine());
+                i = System.currentTimeMillis()-i;
                 System.out.println("Personne trouvé  : "+p);
+                System.out.println("Temps d'execution : "+i+" milliseconde(s)");
             } else if(e.getSource()==buttonSearchSeq){
+                long i = System.currentTimeMillis();
                 Personne p = bInt.searchSeq(Integer.parseInt(txtToSearch.getText()),bInt.getRacine());
+                i = System.currentTimeMillis()-i;
                 System.out.println("Personne trouvé  : "+p);
+                System.out.println("Temps d'execution : "+i+" milliseconde(s)");
             }
         } else {
             if (bInt == null)
