@@ -47,12 +47,15 @@ public class GUI extends JFrame implements ActionListener {
                 i = System.currentTimeMillis()-i;
                 System.out.println("Personne trouvé  : "+p);
                 System.out.println("Temps d'execution : "+i+" milliseconde(s)");
+                System.out.println("Le niveau de compléxité est de : O(log("+txtNbreSpecificItem.getText()+ ") = "+ Math.log(Double.parseDouble(txtNbreSpecificItem.getText())));
             } else if(e.getSource()==buttonSearchSeq){
                 long i = System.currentTimeMillis();
                 Personne p = bInt.searchSeq(bInt.getRacine(),Integer.parseInt(txtToSearch.getText()));
                 i = System.currentTimeMillis()-i;
                 System.out.println("Personne trouvé  : "+p);
                 System.out.println("Temps d'execution : "+i+" milliseconde(s)");
+                System.out.println("Le niveau de compléxité est de : O("+txtNbreSpecificItem.getText()+") = "+ txtNbreSpecificItem.getText());
+
             }
         } else {
             if (bInt == null)

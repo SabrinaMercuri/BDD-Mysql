@@ -70,23 +70,41 @@ public class BTreePlus<Type> implements Serializable {
      * @return la personne correspondant à l'index ou null si non trouvé
      */
     public Personne searchIndex(Noeud<Type> tree,Type id) {
-        
         Personne res = new Personne();
         if (tree.keys.contains(id)) {
             return cherchePersonne(tree.p,id);
         }
-        else if(tree.fils.size()!=0) {
-            for (Noeud<Type> node : tree.fils) {
-                if (node.keys.contains(id)) {
-                    res = cherchePersonne(node.p, id);
+        else {
+            Noeud<Type> bonFils = chercheBonFils(tree,id);
+            res = searchIndex(bonFils,id);
+        }
+        return res;
+    }
+
+
+    /**
+     * Recherche du bon fils
+     * @param tree arbre dans lequel on cherche l'index
+     * @param id ,index que l'on recherche
+     * @return le fils dans lequel l'id est
+     */
+    private Noeud<Type> chercheBonFils(Noeud<Type> tree, Type id) {
+        if(tree.fils==null)  return null;
+        else{
+            ArrayList<Type> keys = tree.keys;
+            for(int i=0;i<tree.keys.size();i++){
+                if (i==0 && (int)tree.keys.get(0)>(int)id) {
+                    return tree.fils.get(0);
                 }
-                else {
-                    res = searchIndex(node, id);
+                else if(i==tree.keys.size()-1 && (int)tree.keys.get(tree.keys.size()-1)<(int)id){
+                    return tree.fils.get(tree.fils.size()-1);
+                }
+                else if((int)tree.keys.get(i+1)>(int)id && (int)tree.keys.get(i)<(int)id){
+                    return tree.fils.get(i+1);
                 }
             }
         }
-
-        return res;
+        return null;
     }
 
     /**
@@ -103,8 +121,9 @@ public class BTreePlus<Type> implements Serializable {
         }
         else if(tree.fils.size() != 0) {
             for (Noeud<Type> n : tree.fils) {
-                res = cherchePersonne(n.p,id);
-                if(res == null) 
+                if(n.keys.contains(id))
+                    res = cherchePersonne(n.p,id);
+                else
                     res = searchSeq(n, id);
             }
         }

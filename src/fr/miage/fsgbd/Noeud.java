@@ -28,7 +28,7 @@ public class Noeud<Type> implements Serializable {
     private Executable compar;
 
     // Ordre de l'abre (u = nombre de cl�s maximum = 2m)
-    private final int u, tailleMin;
+    public final int u, tailleMin;
 
     //Constructeur vide
     public Noeud(){
