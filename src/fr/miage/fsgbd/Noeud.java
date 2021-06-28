@@ -30,6 +30,11 @@ public class Noeud<Type> implements Serializable {
     // Ordre de l'abre (u = nombre de cl�s maximum = 2m)
     private final int u, tailleMin;
 
+    //Constructeur vide
+    public Noeud(){
+        this.u = 4;
+        this.tailleMin = 2;
+    }
 
     /* Constructeur de la classe noeud, qui permet l'ajout et la recherche d'�l�ment dans les branches
      * @param u Nombre de cl�s maximum du noeud

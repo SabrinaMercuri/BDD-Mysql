@@ -43,13 +43,13 @@ public class GUI extends JFrame implements ActionListener {
                 tree.updateUI();
             } else if (e.getSource() == buttonSearchIndex) {
                 long i = System.currentTimeMillis();
-                Personne p = bInt.searchIndex(Integer.parseInt(txtToSearch.getText()),bInt.getRacine());
+                Personne p = bInt.searchIndex(bInt.getRacine(),Integer.parseInt(txtToSearch.getText()));
                 i = System.currentTimeMillis()-i;
                 System.out.println("Personne trouvé  : "+p);
                 System.out.println("Temps d'execution : "+i+" milliseconde(s)");
             } else if(e.getSource()==buttonSearchSeq){
                 long i = System.currentTimeMillis();
-                Personne p = bInt.searchSeq(Integer.parseInt(txtToSearch.getText()),bInt.getRacine());
+                Personne p = bInt.searchSeq(bInt.getRacine(),Integer.parseInt(txtToSearch.getText()));
                 i = System.currentTimeMillis()-i;
                 System.out.println("Personne trouvé  : "+p);
                 System.out.println("Temps d'execution : "+i+" milliseconde(s)");
