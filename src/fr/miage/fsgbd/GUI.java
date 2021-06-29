@@ -5,8 +5,11 @@ import javax.swing.tree.DefaultTreeModel;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 
 /**
@@ -15,17 +18,17 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements ActionListener {
     TestInteger testInt = new TestInteger();
     BTreePlus<Integer> bInt;
-    private JButton buttonClean, buttonRemove, buttonLoad, buttonSave, buttonAddMany, buttonAddItem, buttonRefresh, buttonSearchSeq, buttonSearchIndex;
+    private JButton buttonClean, buttonRemove, buttonLoad, buttonSave, buttonAddMany, buttonAddItem, buttonRefresh, buttonSearchSeq, buttonSearchIndex, buttonReadCsv;
     private JTextField txtNbreItem, txtNbreSpecificItem, txtU, txtFile, removeSpecific, txtToSearch;
     private final JTree tree = new JTree();
-
+    List<List<String>> data;
     public GUI() {
         super();
         build();
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == buttonLoad || e.getSource() == buttonClean || e.getSource() == buttonSave || e.getSource() == buttonRefresh || e.getSource()==buttonSearchIndex || e.getSource()==buttonSearchSeq) {
+        if (e.getSource() == buttonLoad || e.getSource() == buttonClean || e.getSource() == buttonSave || e.getSource() == buttonRefresh || e.getSource()==buttonSearchIndex || e.getSource()==buttonSearchSeq || e.getSource()==buttonReadCsv) {
             if (e.getSource() == buttonLoad) {
                 BDeserializer<Integer> load = new BDeserializer<>();
                 bInt = load.getArbre(txtFile.getText());
@@ -41,21 +44,35 @@ public class GUI extends JFrame implements ActionListener {
                 BSerializer<Integer> save = new BSerializer<>(bInt, txtFile.getText());
             } else if (e.getSource() == buttonRefresh) {
                 tree.updateUI();
+            }else if(e.getSource()==buttonReadCsv){
+                System.out.println("lecture csv");
+                data = lectureCsv();
+                bInt = new BTreePlus<Integer>(Integer.parseInt(txtU.getText()), testInt);
+                for(int i=1;i<=data.size();i++){
+                    bInt.addValeur(Integer.parseInt(data.get(i-1).get(0)));
+                }
             } else if (e.getSource() == buttonSearchIndex) {
+                System.out.println("----------\t Recherche par Index \t----------");
                 long i = System.currentTimeMillis();
                 Personne p = bInt.searchIndex(bInt.getRacine(),Integer.parseInt(txtToSearch.getText()));
                 i = System.currentTimeMillis()-i;
+                System.out.println("{");
                 System.out.println("Personne trouvé  : "+p);
                 System.out.println("Temps d'execution : "+i+" milliseconde(s)");
                 System.out.println("Le niveau de compléxité est de : O(log("+txtNbreSpecificItem.getText()+ ") = "+ Math.log(Double.parseDouble(txtNbreSpecificItem.getText())));
+                System.out.println("}");
+                System.out.println("----------------------------------------------");
             } else if(e.getSource()==buttonSearchSeq){
+                System.out.println("----------\t Recherche séquentielle \t----------");
                 long i = System.currentTimeMillis();
-                Personne p = bInt.searchSeq(bInt.getRacine(),Integer.parseInt(txtToSearch.getText()));
+                Personne p = bInt.searchSeq("Arbre.csv",Integer.parseInt(txtToSearch.getText()));
                 i = System.currentTimeMillis()-i;
+                System.out.println("{");
                 System.out.println("Personne trouvé  : "+p);
                 System.out.println("Temps d'execution : "+i+" milliseconde(s)");
                 System.out.println("Le niveau de compléxité est de : O("+txtNbreSpecificItem.getText()+") = "+ txtNbreSpecificItem.getText());
-
+                System.out.println("}");
+                System.out.println("----------------------------------------------");
             }
         } else {
             if (bInt == null)
@@ -248,7 +265,7 @@ public class GUI extends JFrame implements ActionListener {
         c.gridwidth = 2;
         pane1.add(buttonRefresh, c);
 
-        // WIP
+
         buttonSearchSeq = new JButton("Recherche Seq");
         c.gridx = 2;
         c.gridy = 8;
@@ -256,7 +273,7 @@ public class GUI extends JFrame implements ActionListener {
         c.gridwidth = 1;
         pane1.add(buttonSearchSeq, c);
 
-        // WIP
+
         buttonSearchIndex = new JButton("Recherche Ind");
         c.gridx = 3;
         c.gridy = 8;
@@ -264,12 +281,19 @@ public class GUI extends JFrame implements ActionListener {
         c.gridwidth = 1;
         pane1.add(buttonSearchIndex, c);
 
+        buttonReadCsv = new JButton("Lire depuis un fichier csv");
+        c.gridx = 2;
+        c.gridy = 9;
+        c.weightx = 0.5;
+        c.gridwidth = 2;
+        pane1.add(buttonReadCsv, c);
+
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 400;       //reset to default
         c.weighty = 1.0;   //request any extra vertical space
         c.gridwidth = 4;   //2 columns wide
         c.gridx = 0;
-        c.gridy = 9;
+        c.gridy = 10;
 
         JScrollPane scrollPane = new JScrollPane(tree);
         pane1.add(scrollPane, c);
@@ -287,8 +311,23 @@ public class GUI extends JFrame implements ActionListener {
         buttonRefresh.addActionListener(this);
         buttonSearchSeq.addActionListener(this);
         buttonSearchIndex.addActionListener(this);
+        buttonReadCsv.addActionListener(this);
 
         return pane1;
+    }
+
+    public List<List<String>> lectureCsv() {
+        List<List<String>> data = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("Arbre.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                data.add(Arrays.asList(values));
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return data;
     }
 }
 

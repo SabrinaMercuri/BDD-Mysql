@@ -1,8 +1,13 @@
 package fr.miage.fsgbd;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -111,23 +116,27 @@ public class BTreePlus<Type> implements Serializable {
      * Recherche Séquentielle
      * Complexité : O(n) le temps dépendra du nombre d'enregistrement
      * @param id ,index que l'on recherche
-     * @param tree ,arbre dans lequel on cherche l'index
+     * @param fileName ,nom du fichier de données
      * @return la personne correspondant à l'index ou null si non trouvé
      */
-    public Personne searchSeq(Noeud<Type> tree,Type id) {
-        Personne res = new Personne();
-        if (tree.keys.contains(id)) {
-            res = cherchePersonne(tree.p,id);
+    public Personne searchSeq(String fileName,Type id) {
+        List<List<String>> data = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("Arbre.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                data.add(Arrays.asList(values));
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        else if(tree.fils.size() != 0) {
-            for (Noeud<Type> n : tree.fils) {
-                if(n.keys.contains(id))
-                    res = cherchePersonne(n.p,id);
-                else
-                    res = searchSeq(n, id);
+        Personne p = null;
+        for(int i=1;i<=data.size();i++){
+            if(Integer.parseInt(data.get(i-1).get(0))==(int)id) {
+               p = new Personne((int)id,"nom"+(int)id,"prenom"+(int)id);
             }
         }
-        return res;
+        return p;
     }
 
     /**
