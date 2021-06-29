@@ -12,5 +12,6 @@ M1 MIAGE
 Mysql  
 
 ## Ce qu'on a fait dans le projet :  
-- 
-
+- lecture d'un fichier csv et création d'un arbre à partir de celui-ci (en plus de la sérialisation et déserialisation déjà présente)  
+- recherche séquentielle à partir du fichier csv  
+- recherche par index dans l'arbre  
