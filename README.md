@@ -10,3 +10,7 @@ M1 MIAGE
 
 ## SGBD :  
 Mysql  
+
+## Ce qu'on a fait dans le projet :  
+- 
+
